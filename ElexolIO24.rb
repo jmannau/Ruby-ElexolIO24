@@ -90,7 +90,7 @@ class ElexolIO24
 	end
 
 	def connected?
-		_byte == 'E'
+		_byte = 'E'
 		return _byte == self.echo(_byte) 
 	end
 	
