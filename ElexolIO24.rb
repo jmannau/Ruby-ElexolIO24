@@ -5,6 +5,7 @@ class ElexolIO24
 	CMD_IDENTIFY = "IO24"
 	CMD_WRITE_PORT_A = "A"
 	CMD_WRITE_PORT_A_DIRECTION = "!A"
+	CMD_ECHO = "`"
 	
 	ON = 1
 	OFF = 0
@@ -73,6 +74,24 @@ class ElexolIO24
 		ElexolIO24.connection do |socket|   
 			socket.send(cmd, 0, @address, UDP_PORT)
 		end 
+	end
+	
+	
+	def echo(byte='E')
+		_resp = nil
+		_cmd = CMD_ECHO + byte
+	  ElexolIO24.connection do |socket|   
+	    socket.send(_cmd, 0, @address, UDP_PORT)
+	    _resp = if select([socket], nil, nil, UDP_RECV_TIMEOUT)
+	      socket.recvfrom(2)
+	    end
+		end 
+    _resp
+	end
+
+	def connected?
+		_byte == 'E'
+		return _byte == self.echo(_byte) 
 	end
 	
 	private
